@@ -30,7 +30,11 @@ BUSINESS = {
     "address": "8501 Inkster Rd, Taylor, MI 48180",
     "phone_display": "(313) 254-2699",
     "phone_link": "+13132542699",
+    "maps_link": "https://www.google.com/maps/search/?api=1&query=8501+Inkster+Rd+Taylor+MI+48180",
 }
+
+# Sample trip lengths shown in the "Rates" table on the page.
+EXAMPLE_TRIPS = [1, 3, 5, 7, 14]
 
 # The form uses <input type="datetime-local">, which sends this format.
 DATE_FORMAT = "%Y-%m-%dT%H:%M"
@@ -83,8 +87,12 @@ def home():
     if "checkin" in request.args:
         quote = calculate_quote(checkin, checkout)
 
+    # Price for each sample trip length, e.g. [(1, 17.0), (3, 41.0), ...]
+    examples = [(days, days * DAILY_RATE + BOOKING_FEE) for days in EXAMPLE_TRIPS]
+
     return render_template(
         "index.html",
+        examples=examples,
         biz=BUSINESS,
         rate=DAILY_RATE,
         fee=BOOKING_FEE,

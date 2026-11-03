@@ -1,9 +1,13 @@
-# Skyway Parking – Landing Page Demo
+# Skyway Parking – Landing Page Mockup
 
-A first-page demo built with **Python + Flask**.
+A design proposal for the Skyway Parking home page, built with **Python + Flask**.
+It's a mockup: the page, booking widget and live price quote work, but "Reserve this spot" doesn't book anything yet.
 
-- **Design style:** modelled on pascalwebsolutions.com (off-white + navy + blue, Poppins/Inter, square corners, thin borders, dash labels).
-- **Content & booking flow:** modelled on airportparkingreservations.com (airport / check-in / check-out booking bar, trust badges, why-book, how-it-works).
+## Design idea
+- **Colors come from the logo:** night-slate (the glass behind the sign), silver (lettering, ring, plane), pin blue and the car's sky blue.
+- **Headings use Saira**, the same typeface family as the logo lettering; body text is Manrope.
+- **Booking widget = a boarding pass.** The big search box from airport-parking reservation sites, styled as a parking pass with a tear-off stub for the price.
+- Logo motifs reused across the page: a faint ring behind the hero, a swoosh line that draws itself in, runway lights, a shuttle-route card (lot → McNamara / Evans terminals).
 
 ## Run it
 ```bash
@@ -16,13 +20,15 @@ Open http://localhost:5000
 ## What's where
 | File | What it does |
 |------|--------------|
-| `app.py` | The Python server. Renders the page and calculates the price quote ($12/day + $5 fee) when the hero form is submitted. |
-| `templates/_logo.html` | The Skyway logo drawn as SVG. `on_light=True` gives the navy-lettered version for white backgrounds. |
-| `templates/index.html` | The page layout (Jinja template). `{{ ... }}` = values from Python, `{% if %}` = logic. |
+| `app.py` | The Python server. Renders the page, calculates the quote ($12/day + $5 fee) when the booking form is submitted, and builds the sample-price table. |
+| `templates/index.html` | The page (Jinja template). `{{ ... }}` = values from Python, `{% if %}` / `{% for %}` = logic. |
 | `static/style.css` | All styling. Brand colors are at the top in `:root`. |
+| `static/skyway-logo.svg` | The logo. **Generated** – don't edit by hand. |
+| `tools/build_logo.py` | Python script that draws the logo: turns "SKYWAY"/"PARKING" into vector shapes with fontTools and places every part using measurements from the real sign. |
 
-## Logo
-The logo is redrawn from the official sign as SVG (`templates/_logo.html`).
-The hero shows it in its real silver/blue colors on navy; the white nav and footer use a navy-lettered version.
-To use an official logo file instead, put it in `static/` and replace a `logo(...)` call with
-`<img src="{{ url_for('static', filename='your-logo.png') }}" height="74">`.
+## Rebuilding the logo
+```bash
+pip install fonttools
+python tools/build_logo.py
+```
+Fonts used: Saira (SIL Open Font License), in `tools/fonts/`.
