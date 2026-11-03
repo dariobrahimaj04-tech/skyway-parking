@@ -6,36 +6,18 @@
   <title>Skyway Parking | DTW Airport Parking</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Saira:wdth,wght@112.5,600&family=Saira+Semi+Condensed:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
-  {# ---------- Reusable logo mark (pin + swoosh + plane, based on the real sign) ---------- #}
-  {% macro logo_mark(size=44) %}
-  <svg class="logo-mark" width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" aria-hidden="true">
-    <defs>
-      <linearGradient id="pinBlue" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#5cb8ff"/>
-        <stop offset="1" stop-color="#1e6fd9"/>
-      </linearGradient>
-    </defs>
-    <path d="M14 26a18 18 0 0 1 36 0" fill="none" stroke="#dfe7f1" stroke-width="5" stroke-linecap="round"/>
-    <path d="M16 32 L32 58 L48 32 Z" fill="url(#pinBlue)"/>
-    <path d="M6 44 C 22 50, 44 40, 60 18" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M55 16 l7 -4 l-2 5 z" fill="#ffffff"/>
-  </svg>
-  {% endmacro %}
+  {% from "_logo.html" import logo %}
 
   <!-- ===================== NAVIGATION ===================== -->
   <header class="nav">
     <div class="wrap nav-row">
       <a href="/" class="brand">
-        {{ logo_mark() }}
-        <span class="brand-text">
-          <span class="brand-name">SKYWAY</span>
-          <span class="brand-sub">PARKING</span>
-        </span>
+        {{ logo("nav", 92) }}
       </a>
       <nav class="nav-links">
         <a href="#how">How it works</a>
@@ -170,8 +152,7 @@
   <footer class="footer" id="location">
     <div class="wrap footer-row">
       <a href="/" class="brand">
-        {{ logo_mark(36) }}
-        <span class="brand-text"><span class="brand-name">SKYWAY</span><span class="brand-sub">PARKING</span></span>
+        {{ logo("footer", 72) }}
       </a>
       <div class="footer-info">
         <span>{{ biz.address }}</span>
