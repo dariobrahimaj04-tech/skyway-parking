@@ -87,6 +87,7 @@ def home():
         "index.html",
         biz=BUSINESS,
         rate=DAILY_RATE,
+        fee=BOOKING_FEE,
         checkin=checkin,
         checkout=checkout,
         quote=quote,

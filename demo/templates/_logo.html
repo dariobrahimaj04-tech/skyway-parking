@@ -12,21 +12,25 @@
 
   Usage:  {% from "_logo.html" import logo %}  then  {{ logo("nav", 64) }}
   `uid` keeps the gradient ids unique when the logo is on the page more than once.
+  `on_light=True` swaps the silver for navy so it can sit on a white background
+  (the official silver version only reads on dark backgrounds).
 #}
-{% macro logo(uid, height=64) %}
+{% macro logo(uid, height=64, on_light=False) %}
+{% if on_light %}{% set c1, c2, c3, shadow = "#2a3d63", "#16244a", "#0b132b", ".12" %}
+{% else %}{% set c1, c2, c3, shadow = "#ffffff", "#e4e9ef", "#aeb8c4", ".45" %}{% endif %}
 <svg class="skyway-logo" height="{{ height }}" viewBox="0 0 480 340" role="img" aria-label="Skyway Parking">
   <defs>
     <linearGradient id="{{ uid }}-silver" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset=".55" stop-color="#e4e9ef"/>
-      <stop offset="1" stop-color="#aeb8c4"/>
+      <stop offset="0" stop-color="{{ c1 }}"/>
+      <stop offset=".55" stop-color="{{ c2 }}"/>
+      <stop offset="1" stop-color="{{ c3 }}"/>
     </linearGradient>
     <linearGradient id="{{ uid }}-blue" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#4aa3ef"/>
       <stop offset="1" stop-color="#2b6fd6"/>
     </linearGradient>
     <filter id="{{ uid }}-shadow" x="-10%" y="-10%" width="120%" height="130%">
-      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".45"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="{{ shadow }}"/>
     </filter>
   </defs>
 
