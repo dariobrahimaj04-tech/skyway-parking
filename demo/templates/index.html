@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skyway Parking | DTW Airport Parking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  {# ---------- Reusable logo mark (pin + swoosh + plane, based on the real sign) ---------- #}
+  {% macro logo_mark(size=44) %}
+  <svg class="logo-mark" width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" aria-hidden="true">
+    <defs>
+      <linearGradient id="pinBlue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5cb8ff"/>
+        <stop offset="1" stop-color="#1e6fd9"/>
+      </linearGradient>
+    </defs>
+    <path d="M14 26a18 18 0 0 1 36 0" fill="none" stroke="#dfe7f1" stroke-width="5" stroke-linecap="round"/>
+    <path d="M16 32 L32 58 L48 32 Z" fill="url(#pinBlue)"/>
+    <path d="M6 44 C 22 50, 44 40, 60 18" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M55 16 l7 -4 l-2 5 z" fill="#ffffff"/>
+  </svg>
+  {% endmacro %}
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <header class="nav">
+    <div class="wrap nav-row">
+      <a href="/" class="brand">
+        {{ logo_mark() }}
+        <span class="brand-text">
+          <span class="brand-name">SKYWAY</span>
+          <span class="brand-sub">PARKING</span>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#why">Why Skyway</a>
+        <a href="#location">Location</a>
+      </nav>
+      <a class="nav-call" href="tel:{{ biz.phone_link }}">{{ biz.phone_display }}</a>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <svg class="hero-swoosh" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-40 360 C 380 420, 900 300, 1480 40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    </svg>
+
+    <div class="wrap hero-grid">
+      <!-- Left: headline -->
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span> Now serving {{ biz.airport }}</span>
+        <h1>Park close.<br><span class="grad">Fly stress-free.</span></h1>
+        <p class="lead">
+          Secure, staffed parking minutes from DTW with a free shuttle straight
+          to your terminal. Book in under a minute &mdash; from
+          <strong>${{ '%.0f' % rate }}/day</strong>.
+        </p>
+
+        <ul class="hero-points">
+          <li><span class="check">✓</span> Free 24/7 terminal shuttle</li>
+          <li><span class="check">✓</span> Fenced, lit &amp; monitored lot</li>
+          <li><span class="check">✓</span> Free cancellation</li>
+        </ul>
+      </div>
+
+      <!-- Right: booking card -->
+      <div class="book-card">
+        <div class="book-head">
+          <h2>Reserve your spot</h2>
+          <span class="rate-tag">${{ '%.0f' % rate }}<small>/day</small></span>
+        </div>
+
+        <form method="get" action="/#book" id="book">
+          <label class="field field-static">
+            <span>Airport</span>
+            <div class="static-value">✈ {{ biz.airport }}</div>
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>Drop-off</span>
+              <input type="datetime-local" name="checkin" value="{{ checkin }}" required />
+            </label>
+            <label class="field">
+              <span>Pick-up</span>
+              <input type="datetime-local" name="checkout" value="{{ checkout }}" required />
+            </label>
+          </div>
+          <button type="submit" class="btn-primary">Get my price</button>
+        </form>
+
+        {# This block only appears after the form is submitted (see app.py) #}
+        {% if quote %}
+          {% if quote.error %}
+            <p class="quote-error">{{ quote.error }}</p>
+          {% else %}
+            <div class="quote">
+              <div class="quote-line"><span>{{ quote.days }} day{{ 's' if quote.days != 1 }} × ${{ '%.2f' % rate }}</span><span>${{ '%.2f' % quote.parking }}</span></div>
+              <div class="quote-line"><span>Booking fee</span><span>${{ '%.2f' % quote.fee }}</span></div>
+              <div class="quote-total"><span>Total</span><span>${{ '%.2f' % quote.total }}</span></div>
+              <p class="quote-dates">{{ quote.checkin_pretty }} → {{ quote.checkout_pretty }}</p>
+              <a class="btn-light" href="#">Continue to reserve</a>
+            </div>
+          {% endif %}
+        {% else %}
+          <p class="book-note">No hidden fees · Pay nothing at the lot</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Stat strip -->
+    <div class="wrap stats">
+      <div><strong>5 min</strong><span>to DTW terminals</span></div>
+      <div><strong>24/7</strong><span>shuttle &amp; staff</span></div>
+      <div><strong>${{ '%.0f' % rate }}</strong><span>flat daily rate</span></div>
+      <div><strong>4.8★</strong><span>traveler rating</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2 class="section-title">From driveway to gate in three steps</h2>
+      <div class="steps">
+        <article class="step">
+          <span class="step-num">01</span>
+          <h3>Book online</h3>
+          <p>Choose your dates and lock in your spot. Instant email confirmation.</p>
+        </article>
+        <article class="step">
+          <span class="step-num">02</span>
+          <h3>Park &amp; ride</h3>
+          <p>Pull in, our team greets you, and the shuttle takes you to your terminal.</p>
+        </article>
+        <article class="step">
+          <span class="step-num">03</span>
+          <h3>Fly back easy</h3>
+          <p>Call when you land. We pick you up curbside and bring you to your car.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WHY SKYWAY ===================== -->
+  <section class="section section-alt" id="why">
+    <div class="wrap why-grid">
+      <div>
+        <p class="eyebrow">Why Skyway</p>
+        <h2 class="section-title">Airport parking without the airport prices.</h2>
+        <p class="muted">Skip the garage prices and the long walks. Skyway costs less than parking at the terminal and gets you there just as fast.</p>
+      </div>
+      <div class="features">
+        <div class="feature"><span class="ico">🛡️</span><div><h4>Secure lot</h4><p>Fenced, lit and watched on camera around the clock.</p></div></div>
+        <div class="feature"><span class="ico">🚐</span><div><h4>Free shuttle</h4><p>Door-to-terminal rides whenever you need them.</p></div></div>
+        <div class="feature"><span class="ico">🕐</span><div><h4>Always open</h4><p>Early flight or red-eye, someone is always here.</p></div></div>
+        <div class="feature"><span class="ico">💳</span><div><h4>Simple pricing</h4><p>${{ '%.0f' % rate }}/day plus a small booking fee. That's it.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" id="location">
+    <div class="wrap footer-row">
+      <a href="/" class="brand">
+        {{ logo_mark(36) }}
+        <span class="brand-text"><span class="brand-name">SKYWAY</span><span class="brand-sub">PARKING</span></span>
+      </a>
+      <div class="footer-info">
+        <span>{{ biz.address }}</span>
+        <a href="tel:{{ biz.phone_link }}">{{ biz.phone_display }}</a>
+      </div>
+      <span class="footer-copy">© 2026 Skyway Parking · Demo</span>
+    </div>
+  </footer>
+
+</body>
+</html>
