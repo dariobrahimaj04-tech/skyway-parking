@@ -6,8 +6,9 @@ It's a mockup: the page, booking widget and live price quote work, but "Reserve 
 ## Design idea
 - **Colors come from the logo:** night-slate (the glass behind the sign), silver (lettering, ring, plane), pin blue and the car's sky blue.
 - **Headings use Saira**, the same typeface family as the logo lettering; body text is Manrope.
-- **Booking widget = a boarding pass.** The big search box from airport-parking reservation sites, styled as a parking pass with a tear-off stub for the price.
-- Logo motifs reused across the page: a faint ring behind the hero, a swoosh line that draws itself in, runway lights, a shuttle-route card (lot → McNamara / Evans terminals).
+- **Booking widget = a parking ticket.** The big search box from airport-parking reservation sites, with a dashed tear-off stub that shows the price.
+- **Deliberately flat:** solid colors, thin dividing lines, plain buttons. No glows, gradients or animations.
+- **Real photo:** the "Find us" section uses the photo of the actual Skyway sign (`static/sign-photo.jpg`).
 
 ## Run it
 ```bash
