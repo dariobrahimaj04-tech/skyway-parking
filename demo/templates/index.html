@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skyway Parking | DTW Airport Parking</title>
+  <link rel="icon" href="{{ url_for('static', filename='skyway-logo.svg') }}" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Saira:wdth,wght@112.5,500;112.5,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+{# ---- a few simple line icons ---- #}
+{% macro icon(name) -%}
+<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  {%- if name == "pin" %}<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+  {%- elif name == "phone" %}<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+  {%- elif name == "arrow" %}<path d="M5 12h14M13 6l6 6-6 6"/>
+  {%- elif name == "check" %}<path d="M5 12.5l4.5 4.5L19 7.5"/>
+  {%- endif %}
+</svg>
+{%- endmacro %}
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap nav-row">
+    <a href="/" class="nav-logo"><img src="{{ url_for('static', filename='skyway-logo.svg') }}" alt="Skyway Parking" /></a>
+    <nav class="nav-links">
+      <a href="#rates">Rates</a>
+      <a href="#how">How it works</a>
+      <a href="#visit">Location</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:{{ biz.phone_link }}">{{ biz.phone_display }}</a>
+      <a class="btn btn-primary btn-sm" href="#book">Reserve</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker">Airport parking · Detroit Metro (DTW)</p>
+      <h1>Park at Skyway.<br>Fly from DTW.</h1>
+      <p class="lead">A staffed lot on Inkster Road with a free shuttle to both terminals.
+        ${{ '%.0f' % rate }} a day, booked online, nothing to pay when you arrive.</p>
+    </div>
+
+    <dl class="hero-facts">
+      <div><dt>Daily rate</dt><dd>${{ '%.0f' % rate }}</dd></div>
+      <div><dt>Shuttle</dt><dd>24/7</dd></div>
+      <div><dt>Booking fee</dt><dd>${{ '%.0f' % fee }}</dd></div>
+    </dl>
+  </div>
+
+  <!-- ===== Booking widget, styled as a parking ticket ===== -->
+  <div class="wrap">
+    <form class="pass" method="get" action="/#book" id="book">
+      <div class="pass-main">
+        <div class="pass-top">
+          <span>Reserve a spot</span>
+          <span class="pass-code">Lot → DTW</span>
+        </div>
+        <div class="pass-fields">
+          <div class="field">
+            <span class="label">Airport</span>
+            <span class="value">Detroit Metro (DTW)</span>
+          </div>
+          <label class="field">
+            <span class="label">Drop-off</span>
+            <input type="datetime-local" name="checkin" value="{{ checkin }}" required />
+          </label>
+          <label class="field">
+            <span class="label">Pick-up</span>
+            <input type="datetime-local" name="checkout" value="{{ checkout }}" required />
+          </label>
+        </div>
+        <p class="pass-note">Free cancellation · Shuttle included · Paid online</p>
+      </div>
+
+      {# The stub shows the rate, or the quote once app.py has calculated it #}
+      <div class="pass-stub">
+        {% if quote and not quote.error %}
+          <span class="label">{{ quote.days }} day{{ 's' if quote.days != 1 }}, incl. ${{ '%.0f' % fee }} fee</span>
+          <strong class="stub-price">${{ '%.2f' % quote.total }}</strong>
+          <span class="stub-dates">{{ quote.checkin_pretty }}<br>to {{ quote.checkout_pretty }}</span>
+          <a class="btn btn-primary btn-block" href="#">Reserve this spot</a>
+          <button type="submit" class="stub-link">Change dates</button>
+        {% else %}
+          <span class="label">Daily rate</span>
+          <strong class="stub-price">${{ '%.0f' % rate }}<small> / day</small></strong>
+          {% if quote and quote.error %}<span class="stub-error">{{ quote.error }}</span>{% endif %}
+          <button type="submit" class="btn btn-primary btn-block">See my price</button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== WHY ===================== -->
+<section class="section" id="why">
+  <div class="wrap why-grid">
+    <h2>Why travelers park with us</h2>
+    <div class="why-list">
+      <div class="why-item">
+        <h3>Shuttle to both terminals</h3>
+        <p>Rides to McNamara and Evans around the clock. When you land, call and we'll come get you.</p>
+      </div>
+      <div class="why-item">
+        <h3>A staffed, monitored lot</h3>
+        <p>There's always someone on site, and the property is watched day and night.</p>
+      </div>
+      <div class="why-item">
+        <h3>Your spot is held</h3>
+        <p>Book ahead and the space is yours, even on the busiest travel weekends.</p>
+      </div>
+      <div class="why-item">
+        <h3>One price, all in</h3>
+        <p>${{ '%.0f' % rate }} a day plus a ${{ '%.0f' % fee }} booking fee. Nothing extra at pickup.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RATES (light section) ===================== -->
+<section class="section section-light" id="rates">
+  <div class="wrap rates-grid">
+    <div>
+      <h2>Rates</h2>
+      <p class="muted">The same rate every day of the year. Any part of a day counts as a full day,
+        and the ${{ '%.0f' % fee }} booking fee is charged once per reservation.</p>
+      <p class="rate-big">${{ '%.0f' % rate }}<span>per day</span></p>
+    </div>
+    <table class="rate-table">
+      <thead><tr><th>Trip length</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for days, total in examples %}
+        <tr><td>{{ days }} day{{ 's' if days != 1 }}</td><td>${{ '%.2f' % total }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section" id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li>
+        <span class="step-num">01</span>
+        <h3>Reserve online</h3>
+        <p>Pick your dates and book. Your confirmation comes by email.</p>
+      </li>
+      <li>
+        <span class="step-num">02</span>
+        <h3>Park and ride</h3>
+        <p>Drive to {{ biz.address.split(',')[0] }}, check in with an attendant and take the shuttle to your terminal.</p>
+      </li>
+      <li>
+        <span class="step-num">03</span>
+        <h3>Get picked up</h3>
+        <p>When you land, call the lot. The shuttle picks you up at the curb and brings you back to your car.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== LOCATION ===================== -->
+<section class="section section-alt" id="visit">
+  <div class="wrap visit-grid">
+    <figure class="sign-photo">
+      <img src="{{ url_for('static', filename='sign-photo.jpg') }}" alt="The Skyway Parking sign" />
+      <figcaption>Look for our sign when you pull in.</figcaption>
+    </figure>
+    <div class="visit-info">
+      <h2>Find us</h2>
+      <p class="muted">Just outside Detroit Metro Airport, a short shuttle ride from both terminals.</p>
+      <ul class="visit-lines">
+        <li>{{ icon("pin") }}<a href="{{ biz.maps_link }}" target="_blank" rel="noopener">{{ biz.address }}</a></li>
+        <li>{{ icon("phone") }}<a href="tel:{{ biz.phone_link }}">{{ biz.phone_display }}</a></li>
+      </ul>
+      <a class="btn btn-outline" href="{{ biz.maps_link }}" target="_blank" rel="noopener">Get directions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="section" id="faq">
+  <div class="wrap faq-grid">
+    <h2>Questions</h2>
+    <div class="faq">
+      <details><summary>How does the shuttle work?</summary><p>Park, check in with an attendant and ride straight to your terminal. When you land, call the lot and the shuttle picks you up.</p></details>
+      <details><summary>How is my price calculated?</summary><p>${{ '%.0f' % rate }} for every day or part of a day, plus a one-time ${{ '%.0f' % fee }} booking fee.</p></details>
+      <details><summary>Do I pay anything when I arrive?</summary><p>No. Your reservation is paid online, so there's nothing due at the lot.</p></details>
+      <details><summary>Can I cancel?</summary><p>Yes, reservations can be cancelled free of charge.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap footer-row">
+    <img class="footer-logo" src="{{ url_for('static', filename='skyway-logo.svg') }}" alt="Skyway Parking" />
+    <div class="footer-cols">
+      <div><h4>Parking</h4><a href="#book">Reserve</a><a href="#rates">Rates</a><a href="#how">How it works</a></div>
+      <div><h4>Visit</h4><span>{{ biz.address }}</span><span>{{ biz.airport }}</span></div>
+      <div><h4>Contact</h4><a href="tel:{{ biz.phone_link }}">{{ biz.phone_display }}</a></div>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© 2026 Skyway Parking</span>
+    <span>Design mockup</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "builds": [
+    {
+      "src": "demo/app.py",
+      "use": "@vercel/python",
+      "config": { "includeFiles": "demo/{templates,static}/**" }
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "demo/app.py" }
+  ]
+}
